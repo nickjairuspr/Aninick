@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, Menu, X, Play, Tv } from "lucide-react";
+import { Search, Menu, X, Play, Tv, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
@@ -70,6 +70,17 @@ export default function Navbar() {
                 Browse
               </Button>
             </Link>
+            <Link href="/watchlist">
+              <Button
+                variant={location === "/watchlist" ? "secondary" : "ghost"}
+                size="sm"
+                className="gap-1.5"
+                data-testid="link-nav-watchlist"
+              >
+                <Heart className={`h-3.5 w-3.5 ${location === "/watchlist" ? "fill-purple-500 text-purple-500" : ""}`} />
+                Watchlist
+              </Button>
+            </Link>
           </div>
 
           <Button
@@ -108,6 +119,12 @@ export default function Navbar() {
             <Link href="/search?q=trending" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="ghost" size="sm" className="w-full justify-start">
                 Browse
+              </Button>
+            </Link>
+            <Link href="/watchlist" onClick={() => setMobileMenuOpen(false)}>
+              <Button variant="ghost" size="sm" className="w-full justify-start gap-1.5">
+                <Heart className="h-3.5 w-3.5" />
+                Watchlist
               </Button>
             </Link>
           </div>

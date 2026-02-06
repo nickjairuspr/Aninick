@@ -16,7 +16,14 @@ import {
   Mic,
   Tv,
   Film,
+  Heart,
 } from "lucide-react";
+import {
+  isInWatchlist,
+  addToWatchlist,
+  removeFromWatchlist,
+  type WatchlistItem,
+} from "@/lib/watchlist";
 import { useState, useEffect } from "react";
 
 interface Episode {
@@ -54,6 +61,7 @@ export default function AnimeDetails() {
   const params = useParams<{ id: string }>();
   const id = params.id ? decodeURIComponent(params.id) : "";
   const [watchedEpisodes, setWatchedEpisodes] = useState<Set<string>>(new Set());
+  const [inWatchlist, setInWatchlist] = useState(false);
 
   const { data, isLoading, error } = useQuery<AnimeInfo>({
     queryKey: ["/api/anime/info", id],
@@ -69,6 +77,31 @@ export default function AnimeDetails() {
       }
     } catch {}
   }, []);
+
+  useEffect(() => {
+    if (id) setInWatchlist(isInWatchlist(id));
+  }, [id]);
+
+  const toggleWatchlist = () => {
+    if (!data) return;
+    const item: WatchlistItem = {
+      id: data.id,
+      title: data.title,
+      image: data.image,
+      type: data.type,
+      releaseDate: data.releaseDate,
+      sub: data.sub,
+      dub: data.dub,
+    };
+    if (inWatchlist) {
+      removeFromWatchlist(data.id);
+      setInWatchlist(false);
+    } else {
+      addToWatchlist(item);
+      setInWatchlist(true);
+    }
+    window.dispatchEvent(new Event("watchlist-updated"));
+  };
 
   if (isLoading) {
     return (
@@ -139,14 +172,33 @@ export default function AnimeDetails() {
               />
             </div>
 
-            {firstEpisode && (
-              <Link href={`/watch/${encodeURIComponent(firstEpisode.id)}`}>
-                <Button className="w-full mt-3 gap-2" data-testid="button-watch-now">
-                  <Play className="h-4 w-4" />
-                  Watch Now
-                </Button>
-              </Link>
-            )}
+            <div className="flex flex-col gap-2 mt-3">
+              {firstEpisode && (
+                <Link href={`/watch/${encodeURIComponent(firstEpisode.id)}`}>
+                  <Button className="w-full gap-2" data-testid="button-watch-now">
+                    <Play className="h-4 w-4" />
+                    Watch Now
+                  </Button>
+                </Link>
+              )}
+              <Button
+                variant="outline"
+                className={`w-full gap-2 transition-colors ${
+                  inWatchlist
+                    ? "border-purple-500/50 text-purple-400"
+                    : ""
+                }`}
+                onClick={toggleWatchlist}
+                data-testid="button-toggle-watchlist"
+              >
+                <Heart
+                  className={`h-4 w-4 transition-colors ${
+                    inWatchlist ? "fill-purple-500 text-purple-500" : ""
+                  }`}
+                />
+                {inWatchlist ? "In Watchlist" : "Add to Watchlist"}
+              </Button>
+            </div>
           </div>
 
           <div className="flex-1 space-y-4 min-w-0">

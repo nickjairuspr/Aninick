@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import SearchPage from "@/pages/search";
 import AnimeDetails from "@/pages/anime-details";
 import WatchPage from "@/pages/watch";
+import WatchlistPage from "@/pages/watchlist";
 import NotFound from "@/pages/not-found";
 import { useEffect } from "react";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/search" component={SearchPage} />
       <Route path="/anime/:id" component={AnimeDetails} />
       <Route path="/watch/:episodeId" component={WatchPage} />
+      <Route path="/watchlist" component={WatchlistPage} />
       <Route component={NotFound} />
     </Switch>
   );
