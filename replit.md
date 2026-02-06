@@ -46,4 +46,5 @@ server/
 - Episode navigation (prev/next)
 
 ## Recent Changes
+- 2026-02-06: Added complete Watchlist (Favorites) system with localStorage persistence, watchlist page, heart toggle on anime details, navbar link
 - 2026-02-06: Initial build - complete anime streaming site
